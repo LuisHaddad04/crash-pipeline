@@ -1,0 +1,21 @@
+# Ignore virtual environments
+.venv/
+venv/
+
+# Ignore datasets / MinIO data
+data/
+grafana_data/
+prometheus/
+monitoring/
+
+# Ignore Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Ignore Python cache
+__pycache__/
+
+# Ignore artifacts & large outputs
+artifacts/
+*.pkl
+*.csv
+*.duckdb

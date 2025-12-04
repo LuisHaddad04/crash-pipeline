@@ -1,0 +1,107 @@
+
+services:
+  extractor:
+    container_name: extractor
+    build:
+      context: .
+      dockerfile: Dockerfile.extractor
+    working_dir: /app
+    command: ["python", "extractor.py"]
+    restart: unless-stopped
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/%2F
+    ports:
+      - "8000:8000"
+    networks:
+      - etl_net
+  rabbitmq-exporter:
+    image: kbudde/rabbitmq-exporter
+    ports:
+      - "9419:9419"
+    environment:
+      RABBIT_URL: http://rabbitmq:15672
+      RABBIT_USER: guest
+      RABBIT_PASSWORD: guest
+    depends_on:
+      - rabbitmq
+    restart: unless-stopped
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    user: "${UID}:${GID}" 
+    ports:
+      - "9090:9090"   # Prometheus UI
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /home/vboxuser/prom_data:/prometheus
+    restart: unless-stopped 
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    user: "${UID}:${GID}" 
+    ports:
+      - "3000:3000"   # Grafana UI
+    volumes:
+      - ./grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+      - MINIO_PROMETHEUS_AUTH_TYPE=public
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  
+  cleaner:
+    container_name: cleaner
+    build:
+      context: .
+      dockerfile: Dockerfile.cleaner
+    working_dir: /app
+    command: ["python", "consumer.py"]
+    restart: unless-stopped
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/%2F
+      QUEUE_NAME: clean
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_SECURE: "false"
+      GOLD_DB_PATH: /data/gold.duckdb
+    volumes:
+      - /media/sf_Crash_Type/cleaner_final/cleaner:/app
+      - /media/sf_Crash_Type/cleaner_final/cleaner:/data
+    networks:
+      - etl_net
+
+networks:
+  etl_net:
+    external: true
+    name: etl_network   # <-- put the exact network name you found above
+
+

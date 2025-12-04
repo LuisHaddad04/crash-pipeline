@@ -1,0 +1,26 @@
+{
+  "numeric_features": [
+    "hour"
+  ],
+  "categorical_features": [
+    "day_of_week",
+    "weather_condition",
+    "lighting_condition",
+    "roadway_surface_cond",
+    "prim_contributory_cause",
+    "traffic_control_device",
+    "is_weekend",
+    "hour_bin"
+  ],
+  "all_features_ordered": [
+    "hour",
+    "day_of_week",
+    "weather_condition",
+    "lighting_condition",
+    "roadway_surface_cond",
+    "prim_contributory_cause",
+    "traffic_control_device",
+    "is_weekend",
+    "hour_bin"
+  ]
+}

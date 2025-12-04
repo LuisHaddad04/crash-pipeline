@@ -1,0 +1,12 @@
+# Dockerfile.cleaner
+FROM python:3.11
+
+WORKDIR /app
+COPY requirements-cleaner.txt /app/
+RUN pip install --no-cache-dir -r requirements-cleaner.txt
+
+# copy only what's needed for the worker
+COPY . /app
+
+# default command can be overridden by docker compose
+CMD ["python", "consumer.py"]
