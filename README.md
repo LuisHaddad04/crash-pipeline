@@ -238,3 +238,7 @@ Only specific ports were opened to avoid exposing the VM.
 Azure runs continuously — unlike local environments that shut down when the laptop sleeps.
 
 This allowed long-running ETL pipeline tests.
+
+
+Local vs Cloud Behavior Comparison:
+- Overall, the Azure deployment behaved very similarly to the local Docker environment, with the main differences being networking setup and VM performance. Running in the cloud also allowed longer pipeline execution and provided a more realistic production-style monitoring environment using Prometheus and Grafana.
