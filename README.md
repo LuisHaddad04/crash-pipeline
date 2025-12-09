@@ -167,3 +167,40 @@ Automated retries and fault tolerance
 A comparison of multiple machine learning models
 
 A feature store for tracking engineered features across pipeline runs
+
+
+Azure Virtual Machine Setup
+
+This project was deployed on a cloud-hosted Ubuntu Virtual Machine using Microsoft Azure. The VM serves as the runtime environment for the full ETL pipeline, including RabbitMQ, MinIO, Prometheus, Grafana, and the custom Extractor/Transformer/Cleaner microservices.
+
+Virtual Machine Configuration
+
+VM Type: Ubuntu 22.04 LTS
+
+Size: Standard B2s (2 vCPUs, 4 GiB RAM)
+
+Storage: 64 GB Standard SSD
+
+Region: East US (or whichever region you used)
+
+Authentication: SSH key login
+
+Docker & Docker Compose: Installed manually on first setup
+
+Firewall / NSG: Configured to allow external access to required ports
+
+Ports Opened on Azure
+
+These ports were opened in the VM’s Network Security Group + UFW (if enabled):
+
+Port	Purpose
+22	SSH access to VM
+8000	Extractor Prometheus metrics
+9000–9001	MinIO API + Console
+9090	Prometheus UI
+3000	Grafana dashboard
+5672	RabbitMQ message broker
+15672	RabbitMQ Management UI
+9419	RabbitMQ Prometheus Exporter
+
+All other ports remain closed.
