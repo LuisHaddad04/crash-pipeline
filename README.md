@@ -175,32 +175,32 @@ This project was deployed on a cloud-hosted Ubuntu Virtual Machine using Microso
 
 Virtual Machine Configuration
 
-VM Type: Ubuntu 22.04 LTS
+- VM Type: Ubuntu 22.04 LTS
 
-Size: Standard B2s (2 vCPUs, 4 GiB RAM)
+-Size: Standard B2s (2 vCPUs, 4 GiB RAM)
 
-Storage: 64 GB Standard SSD
+- Storage: 64 GB Standard SSD
 
-Region: East US (or whichever region you used)
+- Region: East US
 
-Authentication: SSH key login
+- Authentication: SSH key login
 
-Docker & Docker Compose: Installed manually on first setup
+- Docker & Docker Compose: Installed manually on first setup
 
-Firewall / NSG: Configured to allow external access to required ports
+- Firewall / NSG: Configured to allow external access to required ports
 
 Ports Opened on Azure
 
 These ports were opened in the VM’s Network Security Group + UFW (if enabled):
 
 Port	Purpose
-22	SSH access to VM
-8000	Extractor Prometheus metrics
-9000–9001	MinIO API + Console
-9090	Prometheus UI
-3000	Grafana dashboard
-5672	RabbitMQ message broker
-15672	RabbitMQ Management UI
-9419	RabbitMQ Prometheus Exporter
+- 22	SSH access to VM
+- 8000	Extractor Prometheus metrics
+- 9000–9001	MinIO API + Console
+- 9090	Prometheus UI
+- 3000	Grafana dashboard
+- 5672	RabbitMQ message broker
+- 15672	RabbitMQ Management UI
+- 9419	RabbitMQ Prometheus Exporter
 
 All other ports remain closed.
