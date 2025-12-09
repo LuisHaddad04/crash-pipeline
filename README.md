@@ -204,3 +204,37 @@ Port	Purpose
 - 9419	RabbitMQ Prometheus Exporter
 
 All other ports remain closed.
+
+Differences Between Local and Cloud Deployment
+
+Running the pipeline on Azure introduced several differences compared to local Docker Desktop:
+
+1. Networking
+
+Containers communicate the same way using internal Docker networks.
+
+External UIs (MinIO/Grafana/RabbitMQ) require public IP + port instead of localhost.
+
+2. Storage Persistence
+
+MinIO and RabbitMQ data persist through Docker volumes on the VM.
+
+Azure SSD performance is slightly slower than local disk.
+
+3. Resource Behavior
+
+CPU throttling on the B2s VM makes extraction and cleaning slightly slower.
+
+Prometheus and Grafana memory footprint is more noticeable in the cloud.
+
+4. Security
+
+Public endpoints require stricter firewall rules.
+
+Only specific ports were opened to avoid exposing the VM.
+
+5. Stability
+
+Azure runs continuously — unlike local environments that shut down when the laptop sleeps.
+
+This allowed long-running ETL pipeline tests.
